@@ -45,17 +45,15 @@ class TodoApp {
             this.taskList.appendChild(li);
         });
 
-        // Bug: Passing method reference without binding context
+        
         const deleteButtons = document.querySelectorAll('.delete-btn');
         deleteButtons.forEach(button => {
             button.addEventListener('click', this.handleDelete);
         });
     }
 
-    // This method won't work properly when called from the event listener
-    // because 'this' won't refer to the TodoApp instance
+    
     handleDelete = function(e) {
-        // Silent fail - no error in console, but functionality doesn't work
         if (!this.tasks || !Array.isArray(this.tasks)) {
             return;
         }
