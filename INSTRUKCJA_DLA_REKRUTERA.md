@@ -1,79 +1,63 @@
-# Zadanie rekrutacyjne - Debugowanie JavaScript
+# Instrukcja dla rekrutera – Debugowanie JavaScript
 
-## Opis zadania dla kandydata
+> Plik tylko do wglądu rekrutera – nie udostępniaj kandydatowi.
 
-**Czas: 15-20 minut**
+## Cel zadania
+Zweryfikować, czy kandydat:
+- Potrafi systematycznie korzystać z DevTools (Debugger, Breakpoints, watch expressions itp.).
+- Rozumie kontekst `this` i różnice pomiędzy funkcją strzałkową a zwykłą.
+- Umie jasno zakomunikować swoje wnioski i zaproponować poprawkę.
 
-Otrzymujesz prostą aplikację "Task Manager" napisaną w HTML/CSS/JavaScript. Aplikacja pozwala na:
-- Dodawanie nowych zadań
-- Oznaczanie zadań jako ukończone
-- Filtrowanie zadań (wszystkie/aktywne/ukończone)
-- Usuwanie zadań
+## Krótki opis buga (poufne)
+1. W pliku `app.js`, metoda `renderTasks()` dodaje listener przycisku:
+   ```js
+   button.addEventListener('click', this.handleDelete);
+   ```
+2. `handleDelete` jest zdefiniowana jako zwykła funkcja przypisana właściwości klasy:
+   ```js
+   handleDelete = function (e) {
+       // ...
+   }
+   ```
+3. Po kliknięciu przycisku listener wywołuje funkcję z kontekstem elementu DOM, a nie instancji `TodoApp` → `this.tasks` jest `undefined`.
 
-**Problem:** W aplikacji znajduje się bug związany z funkcjonalnością usuwania zadań. Twoje zadanie polega na:
-1. Zidentyfikowaniu i opisaniu problemu
-2. Znalezieniu przyczyny używając narzędzi deweloperskich przeglądarki
-3. Zaproponowaniu poprawki
 
-**Wskazówka:** Bug nie powoduje błędów w konsoli. Użyj debuggera w DevTools.
+## Prowadzenie zadania (na rozmowie)
+1. Poproś kandydata, aby uruchomił aplikację (otwórz `index.html`).
+2. Powiedz kandydatowi, że w aplikacji jest bug - nie usuwają się zadania. Niech znajdzie problem i zasugeruje rozwiązanie
+3. Instrukcja dla kandydata - Może korzystać ze wszystkich narzędzi wbudowanych w przeglądarkę/devTools z wyjątkiem narzędzi AI, jeśli takie ma.
+4. Obserwuj, jak korzysta z Debuggera:
+   - czy ustawia breakpoint w obsłudze kliknięcia,
+   - czy bada wartość `this`,
+   - czy potrafi dojść do linii z błędem.
+5. Jeśli utknie, możesz podpowiedzieć: „Sprawdź kontekst `this` w listenerze”.
+6. Całość powinna zmieścić się w 20 min.
 
-## Opis buga (POUFNE - tylko dla rekrutera)
 
-### Objaw
-Po dodaniu kilku zadań i użyciu filtrów, przyciski "Usuń" często usuwają niewłaściwe zadania. Problem występuje szczególnie gdy:
-1. Dodamy kilka zadań
-2. Oznaczymy niektóre jako ukończone
-3. Przełączymy się na widok "Aktywne" lub "Ukończone"
-4. Spróbujemy usunąć zadanie
 
-### Przyczyna
-Bug znajduje się w funkcji `renderTasks()` w liniach 76-85:
+### Co powinien powiedzieć kandydat - jako rozwiązanie? (wystarczy jedno z poniższych)
+1. „Trzeba użyć **funkcji strzałkowej** (=>) wewnątrz `handleDelete`, bo ona zachowuje `this`.”  
+   Przykład:  
+   ```js
+   handleDelete = (e) => { /* kod */ }
+   ```
+2. „Trzeba **związać** (`bind`) funkcję z `this` przy dodawaniu listenera.”  
+   Przykład:  
+   ```js
+   button.addEventListener('click', this.handleDelete.bind(this));
+   ```
 
-```javascript
-for (let i = 0; i < tasks.length; i++) {
-    if (tasks[i].id === task.id) {
-        deleteBtn.addEventListener('click', function() {
-            deleteTask(i);
-        });
-        break;
-    }
-}
-```
+Jeśli kandydat zaproponuje którąś z powyższych opcji (lub powie „trzeba poprawić `this`, bo jest zły kontekst”), możesz uznać, że znalazł rozwiązanie.
 
-Problem polega na tym, że:
-1. Zmienna `i` w pętli for jest przechwytywana przez domknięcie (closure)
-2. Gdy funkcja callback jest wywoływana, używa aktualnej wartości `i`, nie tej z momentu tworzenia
-3. Po przefiltrowaniu zadań, indeksy w tablicy `filteredTasks` nie odpowiadają indeksom w tablicy `tasks`
-4. Funkcja `deleteTask()` otrzymuje niewłaściwy indeks
+---
 
-### Sposób debugowania
-Kandydat powinien:
-1. Otworzyć DevTools (F12)
-2. Postawić breakpoint w funkcji `deleteTask()` lub w event listenerze przycisku
-3. Krok po kroku prześledzić wartość zmiennej `i` i zauważyć, że nie odpowiada ona oczekiwanemu zadaniu
-4. Zrozumieć problem z domknięciami w JavaScript
 
-### Poprawne rozwiązanie
-Można to naprawić na kilka sposobów:
-1. Użyć `const` zamiast `let` wewnątrz pętli
-2. Użyć IIFE (Immediately Invoked Function Expression)
-3. Przekazać ID zadania zamiast indeksu
-4. Użyć metody `findIndex()` wewnątrz `deleteTask()`
-
-Przykład poprawki:
-```javascript
-deleteBtn.addEventListener('click', () => deleteTask(task.id));
-
-function deleteTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    renderTasks();
-}
-```
-
-### Ocena kandydata
-- **100%**: To co level niżej + podaje poprawne rozwiązanie problemu.
-- **Bardzo dobra**: Kandydat szybko identyfikuje problem z closures, używa debuggera efektywnie
-- **Dobra**: Znajduje bug używając debuggera, rozumie problem po wskazówkach
-- **Średnia**: Znajduje bug metodą prób i błędów, potrzebuje pomocy w zrozumieniu / Znajduje buga jedynie czytając kod i poprawnie identyfikuje problem
-- **Dupy nie urywa**: Próbuje czytać kod JS w zakładce sources (znajduje miejsce w kodzie, gdzie potencjalnie bug może być[wskazuje na kod, gdzie bug faktycznie jest], ale nie wie dlaczego)
-- **Słaba**: błądzi w DevTools klikając randomowo w różne narzędzia/Długo zamyśla się w zakładce Console/konsola nie wiedząc co wpisać
+## Kryteria oceny
+| Poziom | Zachowanie kandydata |
+|--------|----------------------|
+| **Wybitny (100 %)** | Szybko reprodukuje błąd, samodzielnie ustawia breakpoint, analizuje `this`, Sugeruje poprawne rozwiązanie. Wyjaśnia szczegółowo różnicę pomiędzy `function` a `=>`. |
+| **Bardzo dobra** | Po kilku minutach wskazuje problem z kontekstem, proponuje poprawkę `.bind` lub arrow(Lambda) function. |
+| **Dobra** | Z pomocą wskazówki dot. `this` znajduje i naprawia bug. |
+| **Dobra** | W miarę sprawnie znajduje problem jedynie czytając kod. Zasugeruj, żeby udowodnił, że kontekst jest inny poprzez pokazanie w debuggerze(na breakpoincie), że this nie jest tym czym powinien być - jeśli to zrobi ma 100% |
+| **ok** | Korzysta z Debuggera, widzi, że `this` jest „dziwny”, ale ma trudność z powiązaniem faktów. |
+| **Słaba** | Ogranicza się do Console lub czytania kodu, nie wchodzi w Debugger, nie znajduje problemu. |
