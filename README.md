@@ -17,7 +17,7 @@ W aplikacji ukryty jest błąd uniemożliwiający poprawne usuwanie zadań. Twoi
 
 ## Twoje zadanie
 1. **Zreprodukuj problem** – dodaj kilka zadań i spróbuj je usunąć.
-2. **Zidentyfikuj miejsce i przyczynę** – skorzystaj z DevTools (Debugger, Breakpoints, Console itp.). Nie używaj zewnętrznych narzędzi ani AI.
+2. **Zidentyfikuj miejsce i przyczynę** – Możesz skorzystać ze wszystkich narzędzi "wbudowanych" w przeglądarkę np. (Debugger, Breakpoints, Console itp.). Nie używaj zewnętrznych narzędzi ani AI.
 3. **Zaproponuj poprawkę** – krótko opisz, co należy zmienić w kodzie, aby naprawić błąd (możesz pokazać fragment kodu).
 
 ## Wskazówki
