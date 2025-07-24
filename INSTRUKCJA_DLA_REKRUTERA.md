@@ -30,8 +30,7 @@ Zweryfikować, czy kandydat:
    - czy ustawia breakpoint w obsłudze kliknięcia,
    - czy bada wartość `this`,
    - czy potrafi dojść do linii z błędem.
-5. Jeśli utknie, możesz podpowiedzieć: „Sprawdź kontekst `this` w listenerze”.
-6. Całość powinna zmieścić się w 20 min.
+5. Całość powinna zmieścić się w 20 min.
 
 
 
@@ -57,7 +56,6 @@ Jeśli kandydat zaproponuje którąś z powyższych opcji (lub powie „trzeba p
 |--------|----------------------|
 | **Wybitny (100 %)** | Szybko reprodukuje błąd, samodzielnie ustawia breakpoint, analizuje `this`, Sugeruje poprawne rozwiązanie. Wyjaśnia szczegółowo różnicę pomiędzy `function` a `=>`. |
 | **Bardzo dobra** | Po kilku minutach wskazuje problem z kontekstem, proponuje poprawkę `.bind` lub arrow(Lambda) function. |
-| **Dobra** | Z pomocą wskazówki dot. `this` znajduje i naprawia bug. |
 | **Dobra** | W miarę sprawnie znajduje problem jedynie czytając kod. Zasugeruj, żeby udowodnił, że kontekst jest inny poprzez pokazanie w debuggerze(na breakpoincie), że this nie jest tym czym powinien być - jeśli to zrobi ma 100% |
 | **ok** | Korzysta z Debuggera, widzi, że `this` jest „dziwny”, ale ma trudność z powiązaniem faktów. |
 | **Słaba** | Ogranicza się do Console lub czytania kodu, nie wchodzi w Debugger, nie znajduje problemu. |
