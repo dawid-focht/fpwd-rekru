@@ -75,8 +75,6 @@ function renderTasks() {
         deleteBtn.className = 'delete-btn';
         deleteBtn.textContent = 'Usuń';
         
-        // BUG: Pętla for tworzy domknięcie które przechwytuje zmienną i, 
-        // ale wartość i zmienia się w każdej iteracji
         for (let i = 0; i < tasks.length; i++) {
             if (tasks[i].id === task.id) {
                 deleteBtn.addEventListener('click', function() {
